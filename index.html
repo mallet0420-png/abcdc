@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
 <title>STAGE CLOCK</title>
 
 <style>
@@ -26,9 +27,9 @@ html, body {
         sans-serif;
 }
 
-button {
+button,
+input {
     font: inherit;
-    cursor: pointer;
 }
 
 /* =========================
@@ -41,6 +42,7 @@ button {
 
     display: grid;
     grid-template-columns: 58% 42%;
+
     align-items: center;
 
     padding: 5vh 6vw;
@@ -67,7 +69,6 @@ button {
     font-size: clamp(60px, 10vw, 160px);
     font-weight: 700;
     line-height: .95;
-    letter-spacing: .02em;
     font-variant-numeric: tabular-nums;
 }
 
@@ -82,12 +83,11 @@ button {
    CURRENT
 ========================= */
 
-.next-area {
+.info-area {
     padding-left: 3vw;
 }
 
-.current-label,
-.next-title {
+.info-label {
     color: #666;
     font-size: clamp(9px, 1.1vw, 14px);
     letter-spacing: .4em;
@@ -95,35 +95,39 @@ button {
 
 .current-name {
     margin-top: 10px;
-    font-size: clamp(25px, 4vw, 60px);
+    font-size: clamp(28px, 4vw, 60px);
     font-weight: 700;
 }
 
 .current-time {
-    color: #777;
     margin-top: 6px;
-    font-size: clamp(13px, 1.6vw, 21px);
+    color: #777;
+    font-size: clamp(13px, 1.5vw, 20px);
 }
 
-.next-block {
-    margin-top: 35px;
+/* =========================
+   NEXT
+========================= */
+
+.next-area {
+    margin-top: 45px;
 }
 
 .next-name {
     margin-top: 10px;
-    font-size: clamp(20px, 3vw, 45px);
+    font-size: clamp(22px, 3vw, 45px);
     font-weight: 700;
 }
 
 .next-time {
-    margin-top: 6px;
+    margin-top: 5px;
     color: #777;
-    font-size: clamp(13px, 1.6vw, 21px);
+    font-size: clamp(13px, 1.5vw, 20px);
 }
 
 .countdown {
     margin-top: 8px;
-    font-size: clamp(28px, 4.5vw, 65px);
+    font-size: clamp(30px, 4.5vw, 65px);
     font-weight: 700;
     font-variant-numeric: tabular-nums;
 }
@@ -135,26 +139,32 @@ button {
 .next-button {
     margin-top: 28px;
 
-    width: min(320px, 90%);
-    height: 70px;
+    width: 82px;
+    height: 82px;
 
     border: 1px solid #444;
-    border-radius: 10px;
+    border-radius: 50%;
 
     background: #151515;
     color: #fff;
 
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 40px;
+    font-weight: 300;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: transform .1s, background .1s;
 }
 
 .next-button:active {
-    transform: scale(.98);
-    background: #252525;
+    transform: scale(.9);
+    background: #292929;
 }
 
 .next-button:disabled {
-    opacity: .3;
+    opacity: .25;
 }
 
 /* =========================
@@ -169,8 +179,8 @@ button {
 
     transform: translateY(-50%);
 
-    width: 52px;
-    height: 104px;
+    width: 54px;
+    height: 108px;
 
     background: #111;
     color: #fff;
@@ -178,27 +188,11 @@ button {
     border: 1px solid #333;
     border-right: none;
 
-    border-radius: 52px 0 0 52px;
+    border-radius: 54px 0 0 54px;
 
     z-index: 3000;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 28px;
-}
-
-#tabArrow {
-    transition: transform .25s;
-}
-
-body.timetable-open #tabArrow {
-    transform: rotate(180deg);
-}
-
-body.timetable-open .timetable-tab {
-    right: min(460px, 90vw);
+    font-size: 30px;
 }
 
 /* =========================
@@ -211,10 +205,10 @@ body.timetable-open .timetable-tab {
     top: 0;
     right: 0;
 
-    width: min(460px, 90vw);
+    width: min(470px, 92vw);
     height: 100dvh;
 
-    background: #070707;
+    background: #080808;
 
     border-left: 1px solid #222;
 
@@ -226,6 +220,7 @@ body.timetable-open .timetable-tab {
     flex-direction: column;
 
     transform: translateX(100%);
+
     transition: transform .25s ease;
 }
 
@@ -234,13 +229,13 @@ body.timetable-open .timetable-tab {
 }
 
 /* =========================
-   SIDE HEADER
+   HEADER
 ========================= */
 
 .side-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
 }
 
 .side-header h2 {
@@ -249,47 +244,41 @@ body.timetable-open .timetable-tab {
     letter-spacing: .35em;
 }
 
-.small-button {
+.close-button {
     background: #111;
     color: #aaa;
-
     border: 1px solid #333;
     border-radius: 5px;
-
-    padding: 7px 10px;
+    padding: 7px 12px;
 }
 
 /* =========================
-   TIMETABLE
+   TIMELINE
 ========================= */
 
 .timeline {
     flex: 1;
     overflow-y: auto;
-
-    margin-top: 14px;
+    margin-top: 15px;
     padding-bottom: 15px;
 }
 
+/* =========================
+   EVENT
+========================= */
+
 .event {
-    position: relative;
-
     display: grid;
-    grid-template-columns: 72px 1fr 30px;
-
+    grid-template-columns: 70px 1fr 28px;
     gap: 8px;
 
-    align-items: start;
-
-    border-left: 3px solid #333;
-
-    padding: 11px 8px;
+    padding: 12px 8px;
 
     margin-bottom: 5px;
 
-    border-radius: 0 7px 7px 0;
+    border-left: 3px solid #333;
 
-    transition: .15s;
+    border-radius: 0 7px 7px 0;
 }
 
 .event.current {
@@ -298,31 +287,28 @@ body.timetable-open .timetable-tab {
 }
 
 .event.completed {
-    opacity: .4;
+    opacity: .42;
 }
 
-.event-time-original {
+.event-main {
+    cursor: pointer;
+}
+
+.original-time {
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     font-variant-numeric: tabular-nums;
 }
 
 .event-name {
     font-size: 15px;
     font-weight: 600;
-    line-height: 1.3;
 }
 
-/*
-    実際の変更後時刻
-*/
-
 .actual-time {
-    margin-top: 3px;
-
+    margin-top: 4px;
     font-size: 11px;
     font-weight: 700;
-
     font-variant-numeric: tabular-nums;
 }
 
@@ -334,44 +320,34 @@ body.timetable-open .timetable-tab {
     color: #48c85d;
 }
 
-/*
-    ＋5min / −5min
-*/
-
-.shift-label {
-    margin-top: 1px;
-
+.shift {
     font-size: 10px;
     font-weight: 700;
 }
 
-.shift-label.push {
+.shift.push {
     color: #ff4141;
 }
 
-.shift-label.pull {
+.shift.pull {
     color: #48c85d;
 }
 
 .on-time {
-    margin-top: 3px;
-
-    font-size: 9px;
+    margin-top: 4px;
     color: #777;
-
-    letter-spacing: .1em;
-}
-
-.event-badge {
-    margin-top: 5px;
-
     font-size: 9px;
-    color: #888;
 }
 
-.delete {
-    background: transparent;
+.now {
+    margin-top: 5px;
+    color: #888;
+    font-size: 9px;
+}
+
+.delete-button {
     border: none;
+    background: transparent;
     color: #555;
     font-size: 20px;
 }
@@ -380,164 +356,109 @@ body.timetable-open .timetable-tab {
    ADD
 ========================= */
 
-.add-form {
-    display: grid;
-
-    grid-template-columns: 90px 1fr;
-
-    gap: 6px;
-
-    margin-top: 5px;
+.add-area {
+    border-top: 1px solid #222;
+    padding-top: 12px;
 }
 
-.add-form input {
-    min-width: 0;
+.add-grid {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 6px;
+}
 
+.add-grid input {
+    width: 100%;
     background: #111;
     color: #fff;
-
     border: 1px solid #333;
     border-radius: 5px;
-
     padding: 9px;
 }
 
-.add-form button {
+.add-grid button {
     grid-column: 1 / 3;
-
     padding: 10px;
-
     background: #111;
     color: #fff;
-
     border: 1px solid #333;
     border-radius: 5px;
 }
 
 /* =========================
-   MANUAL
+   EDIT MODAL
 ========================= */
 
-.shift-section {
-    border-top: 1px solid #222;
-
-    margin-top: 10px;
-    padding-top: 10px;
-}
-
-.shift-title {
-    color: #666;
-
-    font-size: 9px;
-
-    letter-spacing: .3em;
-
-    margin-bottom: 7px;
-}
-
-.shift-amount {
-    display: grid;
-
-    grid-template-columns: repeat(3, 1fr);
-
-    gap: 5px;
-}
-
-.shift-amount button {
-    padding: 8px;
-
-    background: #111;
-    color: #888;
-
-    border: 1px solid #333;
-    border-radius: 5px;
-}
-
-.shift-amount button.selected {
-    background: #fff;
-    color: #000;
-}
-
-.shift-buttons {
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
-    gap: 7px;
-
-    margin-top: 7px;
-}
-
-.shift-button {
-    height: 52px;
-
-    border-radius: 7px;
-
-    font-size: 16px;
-    font-weight: 700;
-}
-
-.push {
-    background: #8e1818;
-    color: #fff;
-
-    border: 1px solid #e53935;
-}
-
-.pull {
-    background: #185c25;
-    color: #fff;
-
-    border: 1px solid #43a047;
-}
-
-/* =========================
-   CONTROLS
-========================= */
-
-.controls {
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
-    gap: 6px;
-
-    margin-top: 7px;
-}
-
-.controls button {
-    padding: 8px;
-
-    background: #111;
-    color: #888;
-
-    border: 1px solid #333;
-    border-radius: 5px;
-}
-
-/* =========================
-   PRODUCTION
-========================= */
-
-.production-button {
+.modal-bg {
     position: fixed;
 
-    right: 20px;
-    bottom: 20px;
+    inset: 0;
 
-    z-index: 1000;
+    background: rgba(0,0,0,.7);
 
-    padding: 11px 16px;
+    z-index: 5000;
 
-    background: #111;
-    color: #fff;
+    display: none;
 
-    border: 1px solid #333;
-    border-radius: 6px;
+    align-items: center;
+    justify-content: center;
 }
 
-body.production-mode .production-button {
-    display: none;
+.modal-bg.show {
+    display: flex;
+}
+
+.modal {
+    width: min(360px, 90vw);
+
+    background: #111;
+
+    border: 1px solid #333;
+
+    border-radius: 10px;
+
+    padding: 20px;
+}
+
+.modal h3 {
+    margin: 0 0 18px;
+    font-size: 16px;
+}
+
+.modal label {
+    display: block;
+    color: #777;
+    font-size: 11px;
+    margin-bottom: 5px;
+}
+
+.modal input {
+    width: 100%;
+    background: #050505;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 11px;
+    margin-bottom: 14px;
+}
+
+.modal-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+}
+
+.modal-buttons button {
+    padding: 11px;
+    background: #181818;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 5px;
+}
+
+.modal-buttons .save {
+    background: #fff;
+    color: #000;
 }
 
 /* =========================
@@ -548,9 +469,7 @@ body.production-mode .production-button {
 
     .main {
         grid-template-columns: 1fr;
-
         text-align: center;
-
         padding: 25px;
     }
 
@@ -558,13 +477,18 @@ body.production-mode .production-button {
         align-items: center;
     }
 
-    .next-area {
+    .info-area {
         padding-left: 0;
-        margin-top: 35px;
+        margin-top: 25px;
+    }
+
+    .next-area {
+        margin-top: 25px;
     }
 
     .next-button {
-        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
@@ -578,16 +502,11 @@ and (orientation: landscape) {
 
     .main {
         grid-template-columns: 58% 42%;
-
         padding: 3vh 5vw;
     }
 
     .clock {
         font-size: min(12vw, 95px);
-    }
-
-    .next-area {
-        padding-left: 2vw;
     }
 
     .current-name {
@@ -598,19 +517,25 @@ and (orientation: landscape) {
         font-size: min(4vw, 32px);
     }
 
-    .next-block {
+    .next-area {
         margin-top: 15px;
     }
 
     .next-button {
+        width: 62px;
+        height: 62px;
+        font-size: 30px;
         margin-top: 15px;
-        height: 55px;
     }
 }
 </style>
 </head>
 
 <body>
+
+<!-- =========================
+     MAIN
+========================= -->
 
 <main class="main">
 
@@ -631,14 +556,14 @@ and (orientation: landscape) {
     </section>
 
 
-    <section class="next-area">
+    <section class="info-area">
 
-        <div class="current-label">
+        <div class="info-label">
             CURRENT
         </div>
 
         <div id="currentName" class="current-name">
-            開始前
+            START
         </div>
 
         <div id="currentTime" class="current-time">
@@ -646,9 +571,9 @@ and (orientation: landscape) {
         </div>
 
 
-        <div class="next-block">
+        <div class="next-area">
 
-            <div class="next-title">
+            <div class="info-label">
                 NEXT
             </div>
 
@@ -670,9 +595,9 @@ and (orientation: landscape) {
         <button
             id="nextButton"
             class="next-button"
-            onclick="goNext(event)"
+            onclick="nextCue()"
         >
-            ▶ 次へ
+            →
         </button>
 
     </section>
@@ -680,17 +605,21 @@ and (orientation: landscape) {
 </main>
 
 
-<!-- TIMETABLE TAB -->
+<!-- =========================
+     TIMETABLE TAB
+========================= -->
 
 <button
     class="timetable-tab"
-    onclick="toggleTimetable(event)"
+    onclick="toggleTimetable()"
 >
-    <span id="tabArrow">‹</span>
+    ‹
 </button>
 
 
-<!-- TIMETABLE -->
+<!-- =========================
+     TIMETABLE
+========================= -->
 
 <aside id="side" class="side">
 
@@ -701,10 +630,10 @@ and (orientation: landscape) {
         </h2>
 
         <button
-            class="small-button"
-            onclick="toggleSeconds(event)"
+            class="close-button"
+            onclick="toggleTimetable()"
         >
-            秒表示
+            閉じる
         </button>
 
     </div>
@@ -715,156 +644,138 @@ and (orientation: landscape) {
 
     <!-- ADD EVENT -->
 
-    <div class="add-form">
+    <div class="add-area">
 
-        <input
-            id="eventTime"
-            type="time"
-        >
+        <div class="add-grid">
 
-        <input
-            id="eventName"
-            type="text"
-            placeholder="進行名"
-        >
-
-        <button onclick="addEvent(event)">
-            ＋ 進行を追加
-        </button>
-
-    </div>
-
-
-    <!-- MANUAL SHIFT -->
-
-    <div class="shift-section">
-
-        <div class="shift-title">
-            MANUAL SHIFT
-        </div>
-
-        <div class="shift-amount">
-
-            <button
-                id="shift1"
-                onclick="selectShift(1,event)"
+            <input
+                id="newTime"
+                type="time"
             >
-                1分
-            </button>
 
-            <button
-                id="shift5"
-                class="selected"
-                onclick="selectShift(5,event)"
+            <input
+                id="newName"
+                type="text"
+                placeholder="アーティスト / 進行"
             >
-                5分
-            </button>
 
-            <button
-                id="shift10"
-                onclick="selectShift(10,event)"
-            >
-                10分
+            <button onclick="addEvent()">
+                ＋ 進行を追加
             </button>
 
         </div>
-
-
-        <div class="shift-buttons">
-
-            <button
-                class="shift-button push"
-                onclick="manualShift(1,event)"
-            >
-                ＋ 押す
-            </button>
-
-            <button
-                class="shift-button pull"
-                onclick="manualShift(-1,event)"
-            >
-                − 巻く
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <div class="controls">
-
-        <button onclick="clearEvents(event)">
-            CLEAR
-        </button>
-
-        <button onclick="enterProductionMode(event)">
-            本番モード
-        </button>
 
     </div>
 
 </aside>
 
 
-<button
-    class="production-button"
-    onclick="enterProductionMode(event)"
+<!-- =========================
+     EDIT MODAL
+========================= -->
+
+<div
+    id="modalBg"
+    class="modal-bg"
 >
-    本番モード
-</button>
+
+    <div class="modal">
+
+        <h3>
+            進行を編集
+        </h3>
+
+        <label>
+            本来の開始時間
+        </label>
+
+        <input
+            id="editTime"
+            type="time"
+        >
+
+        <label>
+            アーティスト / 進行名
+        </label>
+
+        <input
+            id="editName"
+            type="text"
+        >
+
+        <div class="modal-buttons">
+
+            <button
+                onclick="closeEdit()"
+            >
+                キャンセル
+            </button>
+
+            <button
+                class="save"
+                onclick="saveEdit()"
+            >
+                保存
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
 
 <script>
 
-/* =========================================================
+/* =====================================================
    STORAGE
-========================================================= */
+===================================================== */
 
-const EVENTS_KEY =
-    "stage_clock_original_events_v3";
+const EVENT_STORAGE =
+    "stage_clock_events_v5";
 
-const STATE_KEY =
-    "stage_clock_state_v3";
+const STATE_STORAGE =
+    "stage_clock_state_v5";
 
 
-/* =========================================================
-   DEFAULT TIMETABLE
-========================================================= */
+/* =====================================================
+   DEFAULT
+===================================================== */
 
-const DEFAULT_EVENTS = [
+const defaultEvents = [
 
     {
-        id: makeId(),
+        id: createId(),
         time: "19:00",
         name: "ARTIST 1"
     },
 
     {
-        id: makeId(),
+        id: createId(),
         time: "19:30",
         name: "転換"
     },
 
     {
-        id: makeId(),
+        id: createId(),
         time: "19:40",
         name: "ARTIST 2"
     },
 
     {
-        id: makeId(),
+        id: createId(),
         time: "20:10",
         name: "転換"
     },
 
     {
-        id: makeId(),
+        id: createId(),
         time: "20:20",
         name: "ARTIST 3"
     },
 
     {
-        id: makeId(),
+        id: createId(),
         time: "20:50",
         name: "END"
     }
@@ -875,107 +786,77 @@ const DEFAULT_EVENTS = [
 let events =
     JSON.parse(
         localStorage.getItem(
-            EVENTS_KEY
+            EVENT_STORAGE
         )
-    ) || DEFAULT_EVENTS;
+    ) || defaultEvents;
 
-
-/*
-    state.currentIndex
-
-    -1 = 開始前
-     0 = 1番目
-     1 = 2番目
-*/
 
 let state =
     JSON.parse(
         localStorage.getItem(
-            STATE_KEY
+            STATE_STORAGE
         )
     ) || {
 
         currentIndex: -1,
 
         /*
-            実際の開始時刻
+         * 各進行を実際に
+         * 何時に開始したか
+         */
+        actualTimes: {}
 
-            event.id : timestamp
-        */
-
-        actualStartTimes: {},
-
-        /*
-            各進行が元タイテから
-            何分ズレたか
-        */
-
-        shifts: {}
     };
 
 
-let shiftAmount = 5;
-
-let showSeconds = true;
+let editingIndex = -1;
 
 
-/* =========================================================
+/* =====================================================
    ID
-========================================================= */
+===================================================== */
 
-function makeId() {
+function createId() {
 
-    if (
-        window.crypto &&
-        crypto.randomUUID
-    ) {
-        return crypto.randomUUID();
-    }
-
-    return (
-        Date.now().toString(36) +
+    return Date.now().toString(36)
+        +
         Math.random()
             .toString(36)
-            .slice(2)
-    );
+            .substring(2, 8);
 }
 
 
-/* =========================================================
+/* =====================================================
    SAVE
-========================================================= */
+===================================================== */
 
 function save() {
 
     localStorage.setItem(
-        EVENTS_KEY,
+        EVENT_STORAGE,
         JSON.stringify(events)
     );
 
     localStorage.setItem(
-        STATE_KEY,
+        STATE_STORAGE,
         JSON.stringify(state)
     );
 }
 
 
-/* =========================================================
+/* =====================================================
    TIME
-========================================================= */
+===================================================== */
 
 function timeToSeconds(time) {
 
-    const [
-        h,
-        m
-    ] =
-        time
-            .split(":")
-            .map(Number);
+    const parts =
+        time.split(":");
 
     return (
-        h * 3600 +
-        m * 60
+        Number(parts[0]) * 3600
+        +
+        Number(parts[1]) * 60
     );
 }
 
@@ -983,84 +864,65 @@ function timeToSeconds(time) {
 function secondsToTime(seconds) {
 
     seconds =
-        (
-            seconds % 86400 +
-            86400
-        ) % 86400;
-
+        ((seconds % 86400) + 86400)
+        % 86400;
 
     const h =
         Math.floor(
             seconds / 3600
         );
 
-
     const m =
         Math.floor(
-            (
-                seconds % 3600
-            ) / 60
+            (seconds % 3600) / 60
         );
 
+    const s =
+        seconds % 60;
 
     return (
-        String(h).padStart(2, "0") +
-        ":" +
+        String(h).padStart(2, "0")
+        +
+        ":"
+        +
         String(m).padStart(2, "0")
+        +
+        ":"
+        +
+        String(s).padStart(2, "0")
     );
 }
 
 
 function getNowSeconds() {
 
-    const now =
-        new Date();
+    const now = new Date();
 
     return (
-        now.getHours() * 3600 +
-        now.getMinutes() * 60 +
+        now.getHours() * 3600
+        +
+        now.getMinutes() * 60
+        +
         now.getSeconds()
     );
 }
 
 
-/* =========================================================
-   NEXT INDEX
-========================================================= */
+/* =====================================================
+   DIFFERENCE
+===================================================== */
 
-function getNextIndex() {
-
-    const next =
-        state.currentIndex + 1;
-
-    if (
-        next >= events.length
-    ) {
-        return -1;
-    }
-
-    return next;
-}
-
-
-/* =========================================================
-   CALCULATE DIFFERENCE
-========================================================= */
-
-function calculateDifference(
+function getDifference(
     planned,
     actual
 ) {
 
     let diff =
-        actual -
-        planned;
-
+        actual - planned;
 
     /*
-        日付またぎ対策
-    */
-
+     * 日付またぎ対策
+     */
     if (diff > 43200) {
         diff -= 86400;
     }
@@ -1069,557 +931,367 @@ function calculateDifference(
         diff += 86400;
     }
 
+    return diff;
+}
+
+
+/* =====================================================
+   NEXT INDEX
+===================================================== */
+
+function getNextIndex() {
+
+    const index =
+        state.currentIndex + 1;
+
+    if (
+        index >= events.length
+    ) {
+        return -1;
+    }
+
+    return index;
+}
+
+
+/* =====================================================
+   ACTUAL TIME
+===================================================== */
+
+/*
+ * まだ実際の開始時刻が
+ * 記録されていない場合は、
+ *
+ * 「直前の進行の実時刻」
+ * を基準にして、
+ * 元タイテの時間差を加える。
+ *
+ * これによって
+ *
+ * +5min
+ *
+ * が後続の進行にも
+ * 自動的に引き継がれる。
+ */
+
+function getPredictedTime(index) {
+
+    if (
+        index < 0 ||
+        index >= events.length
+    ) {
+        return null;
+    }
+
 
     /*
-        秒は丸めて分にする
-    */
+     * 実際の開始時刻が
+     * すでに記録されている場合
+     */
 
-    return Math.round(
-        diff / 60
+    if (
+        state.actualTimes[
+            events[index].id
+        ] !== undefined
+    ) {
+
+        return state.actualTimes[
+            events[index].id
+        ];
+    }
+
+
+    /*
+     * 最初の進行
+     */
+
+    let knownIndex = -1;
+
+
+    for (
+        let i = index - 1;
+        i >= 0;
+        i--
+    ) {
+
+        if (
+            state.actualTimes[
+                events[i].id
+            ] !== undefined
+        ) {
+
+            knownIndex = i;
+
+            break;
+        }
+    }
+
+
+    /*
+     * 実績がまだない場合
+     */
+
+    if (
+        knownIndex === -1
+    ) {
+
+        return timeToSeconds(
+            events[index].time
+        );
+    }
+
+
+    /*
+     * 直前の実績から
+     * 元タイテ上の経過時間を足す
+     */
+
+    let result =
+        state.actualTimes[
+            events[knownIndex].id
+        ];
+
+
+    for (
+        let i = knownIndex + 1;
+        i <= index;
+        i++
+    ) {
+
+        const previous =
+            timeToSeconds(
+                events[i - 1].time
+            );
+
+        const current =
+            timeToSeconds(
+                events[i].time
+            );
+
+        let interval =
+            current - previous;
+
+        if (interval < 0) {
+            interval += 86400;
+        }
+
+        result += interval;
+    }
+
+
+    return result % 86400;
+}
+
+
+/* =====================================================
+   CURRENT SHIFT
+===================================================== */
+
+function getShift(index) {
+
+    if (
+        index < 0 ||
+        index >= events.length
+    ) {
+        return 0;
+    }
+
+
+    const planned =
+        timeToSeconds(
+            events[index].time
+        );
+
+
+    const actual =
+        getPredictedTime(index);
+
+
+    return getDifference(
+        planned,
+        actual
     );
 }
 
 
-/* =========================================================
-   NEXT
-========================================================= */
+/* =====================================================
+   NEXT CUE
+===================================================== */
 
-/*
-    ★重要
+function nextCue() {
 
-    「次へ」を押した瞬間、
-
-    予定時刻
-          ↓
-    実際に押した時刻
-
-    の差を計算。
-
-    その差を「その進行の実績」として
-    保存する。
-
-    さらに、
-
-    現在までのズレ
-          +
-    今回の進行で発生したズレ
-
-    ではなく、
-
-    「その進行が実際に何時に始まったか」
-
-    を基準にする。
-
-    これにより、
-
-    押す → 転換で巻く → ON TIME
-
-    が可能になる。
-*/
-
-function goNext(e) {
-
-    if (e) {
-        e.stopPropagation();
-    }
-
-
-    const nextIndex =
+    const index =
         getNextIndex();
 
 
     if (
-        nextIndex === -1
+        index === -1
     ) {
         return;
     }
 
 
-    const event =
-        events[nextIndex];
-
-
     /*
-        予定時刻
-    */
-
-    const planned =
-        timeToSeconds(
-            event.time
-        );
-
-
-    /*
-        実際に「次へ」を
-        押した時刻
-    */
+     * →を押した瞬間の
+     * 現在時刻
+     */
 
     const actual =
         getNowSeconds();
 
 
     /*
-        差分
-    */
+     * この進行の
+     * 本来の時間
+     */
 
-    const diff =
-        calculateDifference(
-            planned,
-            actual
+    const planned =
+        timeToSeconds(
+            events[index].time
         );
 
 
     /*
-        実績時刻を保存
-    */
+     * 実際の開始時刻を保存
+     */
 
-    state.actualStartTimes[
-        event.id
-    ] =
-        actual;
-
-
-    /*
-        元タイテとの差
-    */
-
-    state.shifts[
-        event.id
-    ] =
-        diff;
+    state.actualTimes[
+        events[index].id
+    ] = actual;
 
 
     /*
-        現在進行を更新
-    */
+     * 現在進行を更新
+     */
 
     state.currentIndex =
-        nextIndex;
+        index;
 
 
     save();
 
     renderTimeline();
-    updateDisplay();
+
+    updateMain();
 }
 
 
-/* =========================================================
-   MANUAL SHIFT
-========================================================= */
+/* =====================================================
+   CLOCK
+===================================================== */
 
-/*
-    手動の＋/−は、
+function updateClock() {
 
-    「現在進行以降を実際の時間として
-     変更したい」
-
-    とき用。
-
-    元タイテは絶対に変更しない。
-*/
-
-function manualShift(
-    direction,
-    e
-) {
-
-    if (e) {
-        e.stopPropagation();
-    }
+    const now =
+        new Date();
 
 
-    let index =
+    const h =
+        String(
+            now.getHours()
+        ).padStart(2, "0");
+
+    const m =
+        String(
+            now.getMinutes()
+        ).padStart(2, "0");
+
+    const s =
+        String(
+            now.getSeconds()
+        ).padStart(2, "0");
+
+
+    document.getElementById(
+        "clock"
+    ).textContent =
+        `${h}:${m}:${s}`;
+
+
+    const days = [
+        "SUN",
+        "MON",
+        "TUE",
+        "WED",
+        "THU",
+        "FRI",
+        "SAT"
+    ];
+
+
+    document.getElementById(
+        "date"
+    ).textContent =
+
+        `${now.getFullYear()} / `
+
+        +
+
+        `${String(
+            now.getMonth() + 1
+        ).padStart(2, "0")} / `
+
+        +
+
+        `${String(
+            now.getDate()
+        ).padStart(2, "0")} `
+
+        +
+
+        days[
+            now.getDay()
+        ];
+
+
+    updateMain();
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+function updateMain() {
+
+    /*
+     * CURRENT
+     */
+
+    const current =
         state.currentIndex;
 
 
     if (
-        index < 0
-    ) {
-        index = 0;
-    }
-
-
-    if (
-        index >= events.length
-    ) {
-        return;
-    }
-
-
-    const amount =
-        direction *
-        shiftAmount;
-
-
-    /*
-        現在の実績時刻を取得
-    */
-
-    const currentEvent =
-        events[index];
-
-
-    const currentShift =
-        state.shifts[
-            currentEvent.id
-        ] || 0;
-
-
-    /*
-        現在進行から後ろを
-        相対的に変更
-    */
-
-    for (
-        let i = index;
-        i < events.length;
-        i++
+        current >= 0 &&
+        current < events.length
     ) {
 
-        const id =
-            events[i].id;
-
-
-        const old =
-            state.shifts[id] || 0;
-
-
-        state.shifts[id] =
-            old + amount;
-    }
-
-
-    save();
-
-    renderTimeline();
-    updateDisplay();
-}
-
-
-/* =========================================================
-   SHIFT SELECT
-========================================================= */
-
-function selectShift(
-    amount,
-    e
-) {
-
-    if (e) {
-        e.stopPropagation();
-    }
-
-
-    shiftAmount =
-        amount;
-
-
-    document
-        .querySelectorAll(
-            ".shift-amount button"
-        )
-        .forEach(
-            button =>
-                button.classList.remove(
-                    "selected"
-                )
-        );
-
-
-    document
-        .getElementById(
-            "shift" + amount
-        )
-        .classList.add(
-            "selected"
-        );
-}
-
-
-/* =========================================================
-   ACTUAL TIME FOR EVENT
-========================================================= */
-
-function getActualTime(
-    index
-) {
-
-    const event =
-        events[index];
-
-
-    const shift =
-        state.shifts[
-            event.id
-        ] || 0;
-
-
-    return secondsToTime(
-        timeToSeconds(
-            event.time
-        ) +
-        shift * 60
-    );
-}
-
-
-/* =========================================================
-   RENDER
-========================================================= */
-
-function renderTimeline() {
-
-    const timeline =
-        document.getElementById(
-            "timeline"
-        );
-
-
-    timeline.innerHTML = "";
-
-
-    events.forEach(
-        (event, index) => {
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-
-            div.className =
-                "event";
-
-
-            /*
-                現在
-            */
-
-            if (
-                index ===
-                state.currentIndex
-            ) {
-
-                div.classList.add(
-                    "current"
-                );
-            }
-
-
-            /*
-                完了
-            */
-
-            if (
-                index <
-                state.currentIndex
-            ) {
-
-                div.classList.add(
-                    "completed"
-                );
-            }
-
-
-            const shift =
-                state.shifts[
-                    event.id
-                ] || 0;
-
-
-            let actualHTML = "";
-
-
-            /*
-                押し
-            */
-
-            if (
-                shift > 0
-            ) {
-
-                actualHTML = `
-
-                    <div class="
-                        actual-time
-                        push
-                    ">
-                        ${getActualTime(index)}
-                    </div>
-
-                    <div class="
-                        shift-label
-                        push
-                    ">
-                        ＋${shift}min
-                    </div>
-
-                `;
-            }
-
-
-            /*
-                巻き
-            */
-
-            else if (
-                shift < 0
-            ) {
-
-                actualHTML = `
-
-                    <div class="
-                        actual-time
-                        pull
-                    ">
-                        ${getActualTime(index)}
-                    </div>
-
-                    <div class="
-                        shift-label
-                        pull
-                    ">
-                        −${Math.abs(shift)}min
-                    </div>
-
-                `;
-            }
-
-
-            /*
-                ON TIME
-            */
-
-            else if (
-                index <=
-                state.currentIndex
-            ) {
-
-                actualHTML = `
-
-                    <div class="on-time">
-                        ON TIME
-                    </div>
-
-                `;
-            }
-
-
-            /*
-                現在バッジ
-            */
-
-            let badge = "";
-
-
-            if (
-                index ===
-                state.currentIndex
-            ) {
-
-                badge = `
-
-                    <div class="event-badge">
-                        ● NOW
-                    </div>
-
-                `;
-            }
-
-
-            div.innerHTML = `
-
-                <div
-                    class="event-time-original"
-                >
-                    ${event.time}
-                </div>
-
-
-                <div>
-
-                    <div class="event-name">
-                        ${escapeHTML(
-                            event.name
-                        )}
-                    </div>
-
-                    ${actualHTML}
-
-                    ${badge}
-
-                </div>
-
-
-                <button
-                    class="delete"
-                    onclick="
-                        deleteEvent(
-                            ${index},
-                            event
-                        )
-                    "
-                >
-                    ×
-                </button>
-
-            `;
-
-
-            timeline.appendChild(
-                div
-            );
-        }
-    );
-}
-
-
-/* =========================================================
-   DISPLAY
-========================================================= */
-
-function updateDisplay() {
-
-    /*
-        CURRENT
-    */
-
-    const currentIndex =
-        state.currentIndex;
-
-
-    if (
-        currentIndex >= 0
-    ) {
-
-        const current =
-            events[
-                currentIndex
-            ];
+        const event =
+            events[current];
 
 
         document.getElementById(
             "currentName"
         ).textContent =
-            current.name;
+            event.name;
 
 
         document.getElementById(
             "currentTime"
         ).textContent =
-            getActualTime(
-                currentIndex
+            secondsToTime(
+                state.actualTimes[
+                    event.id
+                ]
             );
 
-    }
-
-    else {
+    } else {
 
         document.getElementById(
             "currentName"
         ).textContent =
-            "開始前";
+            "START";
 
 
         document.getElementById(
@@ -1630,21 +1302,21 @@ function updateDisplay() {
 
 
     /*
-        NEXT
-    */
+     * NEXT
+     */
 
-    const nextIndex =
+    const next =
         getNextIndex();
 
 
     if (
-        nextIndex === -1
+        next === -1
     ) {
 
         document.getElementById(
             "nextName"
         ).textContent =
-            "本日の進行終了";
+            "END";
 
 
         document.getElementById(
@@ -1669,196 +1341,433 @@ function updateDisplay() {
     }
 
 
-    const next =
-        events[nextIndex];
+    const nextEvent =
+        events[next];
 
 
     document.getElementById(
         "nextName"
     ).textContent =
-        next.name;
+        nextEvent.name;
+
+
+    /*
+     * 予測される次の時間
+     */
+
+    const predicted =
+        getPredictedTime(next);
 
 
     document.getElementById(
         "nextTime"
     ).textContent =
-        getActualTime(
-            nextIndex
+        secondsToTime(
+            predicted
         );
+
+
+    /*
+     * 現在時刻との差
+     */
+
+    let diff =
+        predicted -
+        getNowSeconds();
+
+
+    /*
+     * 日付またぎ
+     */
+
+    if (diff > 43200) {
+        diff -= 86400;
+    }
+
+    if (diff < -43200) {
+        diff += 86400;
+    }
+
+
+    const countdown =
+        document.getElementById(
+            "countdown"
+        );
+
+
+    /*
+     * 未来
+     */
+
+    if (
+        diff >= 0
+    ) {
+
+        countdown.textContent =
+            formatDuration(diff);
+
+        countdown.style.color =
+            "#fff";
+
+    }
+
+    /*
+     * 押している
+     */
+
+    else {
+
+        countdown.textContent =
+            "+" +
+            formatDuration(
+                Math.abs(diff)
+            );
+
+        countdown.style.color =
+            "#ff4141";
+    }
 
 
     document.getElementById(
         "nextButton"
     ).disabled =
         false;
+}
 
 
-    /*
-        カウントダウン
-    */
+/* =====================================================
+   DURATION
+===================================================== */
 
-    const target =
-        timeToSeconds(
-            getActualTime(
-                nextIndex
-            )
+function formatDuration(seconds) {
+
+    seconds =
+        Math.floor(
+            Math.abs(seconds)
         );
-
-
-    let diff =
-        target -
-        getNowSeconds();
-
-
-    if (
-        diff < 0
-    ) {
-
-        diff += 86400;
-    }
 
 
     const h =
         Math.floor(
-            diff / 3600
+            seconds / 3600
         );
-
 
     const m =
         Math.floor(
-            (
-                diff % 3600
-            ) / 60
+            (seconds % 3600) / 60
         );
 
-
     const s =
-        diff % 60;
+        seconds % 60;
 
 
-    document.getElementById(
-        "countdown"
-    ).textContent =
-
-        String(h).padStart(2, "0") +
-        ":" +
-        String(m).padStart(2, "0") +
-        ":" +
-        String(s).padStart(2, "0");
-}
-
-
-/* =========================================================
-   CLOCK
-========================================================= */
-
-function updateClock() {
-
-    const now =
-        new Date();
-
-
-    const h =
-        String(
-            now.getHours()
-        ).padStart(2, "0");
-
-
-    const m =
-        String(
-            now.getMinutes()
-        ).padStart(2, "0");
-
-
-    const s =
-        String(
-            now.getSeconds()
-        ).padStart(2, "0");
-
-
-    document.getElementById(
-        "clock"
-    ).textContent =
-
-        showSeconds
-            ? `${h}:${m}:${s}`
-            : `${h}:${m}`;
-
-
-    const days = [
-        "SUN",
-        "MON",
-        "TUE",
-        "WED",
-        "THU",
-        "FRI",
-        "SAT"
-    ];
-
-
-    document.getElementById(
-        "date"
-    ).textContent =
-
-        `${now.getFullYear()} / ` +
-        `${String(
-            now.getMonth() + 1
-        ).padStart(2, "0")} / ` +
-        `${String(
-            now.getDate()
-        ).padStart(2, "0")} ` +
-        `${days[now.getDay()]}`;
-
-
-    updateDisplay();
-}
-
-
-/*
-    次の秒の境界に合わせる
-*/
-
-function preciseClock() {
-
-    updateClock();
-
-
-    const now =
-        new Date();
-
-
-    const delay =
-        1000 -
-        now.getMilliseconds();
-
-
-    setTimeout(
-        preciseClock,
-        delay
+    return (
+        String(h).padStart(2, "0")
+        +
+        ":"
+        +
+        String(m).padStart(2, "0")
+        +
+        ":"
+        +
+        String(s).padStart(2, "0")
     );
 }
 
 
-/* =========================================================
-   ADD EVENT
-========================================================= */
+/* =====================================================
+   TIMETABLE
+===================================================== */
 
-function addEvent(e) {
+function renderTimeline() {
 
-    if (e) {
-        e.stopPropagation();
-    }
+    const timeline =
+        document.getElementById(
+            "timeline"
+        );
 
+
+    timeline.innerHTML = "";
+
+
+    events.forEach(
+        (event, index) => {
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+
+            element.className =
+                "event";
+
+
+            if (
+                index ===
+                state.currentIndex
+            ) {
+
+                element.classList.add(
+                    "current"
+                );
+            }
+
+
+            if (
+                index <
+                state.currentIndex
+            ) {
+
+                element.classList.add(
+                    "completed"
+                );
+            }
+
+
+            const shift =
+                getShift(index);
+
+
+            let actualHTML = "";
+
+
+            /*
+             * まだ始まっていない
+             * 進行は予測時間
+             */
+
+            const predicted =
+                getPredictedTime(index);
+
+
+            /*
+             * 実績がある
+             */
+
+            const hasActual =
+                state.actualTimes[
+                    event.id
+                ] !== undefined;
+
+
+            if (
+                hasActual
+            ) {
+
+                const actual =
+                    state.actualTimes[
+                        event.id
+                    ];
+
+
+                if (
+                    shift > 0
+                ) {
+
+                    actualHTML = `
+
+                        <div
+                            class="actual-time push"
+                        >
+                            ${secondsToTime(actual)}
+                        </div>
+
+                        <div
+                            class="shift push"
+                        >
+                            ＋${Math.abs(
+                                Math.round(
+                                    shift / 60
+                                )
+                            )}min
+                        </div>
+
+                    `;
+
+                }
+
+                else if (
+                    shift < 0
+                ) {
+
+                    actualHTML = `
+
+                        <div
+                            class="actual-time pull"
+                        >
+                            ${secondsToTime(actual)}
+                        </div>
+
+                        <div
+                            class="shift pull"
+                        >
+                            −${Math.abs(
+                                Math.round(
+                                    shift / 60
+                                )
+                            )}min
+                        </div>
+
+                    `;
+
+                }
+
+                else {
+
+                    actualHTML = `
+
+                        <div class="on-time">
+                            ON TIME
+                        </div>
+
+                    `;
+                }
+
+            }
+
+            /*
+             * 未来の予測時間
+             */
+
+            else if (
+                shift !== 0
+            ) {
+
+                const predictedShift =
+                    shift;
+
+
+                if (
+                    predictedShift > 0
+                ) {
+
+                    actualHTML = `
+
+                        <div
+                            class="actual-time push"
+                        >
+                            ${secondsToTime(predicted)}
+                        </div>
+
+                        <div
+                            class="shift push"
+                        >
+                            ＋${Math.abs(
+                                Math.round(
+                                    predictedShift / 60
+                                )
+                            )}min
+                        </div>
+
+                    `;
+
+                }
+
+                else {
+
+                    actualHTML = `
+
+                        <div
+                            class="actual-time pull"
+                        >
+                            ${secondsToTime(predicted)}
+                        </div>
+
+                        <div
+                            class="shift pull"
+                        >
+                            −${Math.abs(
+                                Math.round(
+                                    predictedShift / 60
+                                )
+                            )}min
+                        </div>
+
+                    `;
+                }
+            }
+
+
+            let nowHTML = "";
+
+
+            if (
+                index ===
+                state.currentIndex
+            ) {
+
+                nowHTML = `
+
+                    <div class="now">
+                        ● NOW
+                    </div>
+
+                `;
+            }
+
+
+            element.innerHTML = `
+
+                <div class="original-time">
+                    ${event.time}
+                </div>
+
+
+                <div
+                    class="event-main"
+                    onclick="
+                        openEdit(${index})
+                    "
+                >
+
+                    <div class="event-name">
+                        ${escapeHTML(event.name)}
+                    </div>
+
+                    ${actualHTML}
+
+                    ${nowHTML}
+
+                </div>
+
+
+                <button
+                    class="delete-button"
+                    onclick="
+                        deleteEvent(${index})
+                    "
+                >
+                    ×
+                </button>
+
+            `;
+
+
+            timeline.appendChild(
+                element
+            );
+
+        }
+    );
+}
+
+
+/* =====================================================
+   ADD
+===================================================== */
+
+function addEvent() {
 
     const time =
         document.getElementById(
-            "eventTime"
+            "newTime"
         ).value;
 
 
     const name =
         document.getElementById(
-            "eventName"
+            "newName"
         ).value.trim();
 
 
@@ -1868,7 +1777,7 @@ function addEvent(e) {
     ) {
 
         alert(
-            "時刻と進行名を入力してください。"
+            "時間と名前を入力してください。"
         );
 
         return;
@@ -1877,59 +1786,182 @@ function addEvent(e) {
 
     events.push({
 
-        id: makeId(),
+        id: createId(),
 
         time,
 
         name
+
     });
 
 
-    /*
-        元タイテ順
-    */
-
-    events.sort(
-        (a, b) =>
-            timeToSeconds(
-                a.time
-            ) -
-            timeToSeconds(
-                b.time
-            )
-    );
-
+    sortEvents();
 
     save();
 
     renderTimeline();
-    updateDisplay();
+
+    updateMain();
 
 
     document.getElementById(
-        "eventTime"
+        "newTime"
     ).value = "";
 
 
     document.getElementById(
-        "eventName"
+        "newName"
     ).value = "";
 }
 
 
-/* =========================================================
-   DELETE
-========================================================= */
+/* =====================================================
+   SORT
+===================================================== */
 
-function deleteEvent(
-    index,
-    e
-) {
+function sortEvents() {
 
-    if (e) {
-        e.stopPropagation();
+    events.sort(
+        (a, b) =>
+
+            timeToSeconds(a.time)
+            -
+            timeToSeconds(b.time)
+    );
+}
+
+
+/* =====================================================
+   EDIT
+===================================================== */
+
+function openEdit(index) {
+
+    editingIndex =
+        index;
+
+
+    const event =
+        events[index];
+
+
+    document.getElementById(
+        "editTime"
+    ).value =
+        event.time;
+
+
+    document.getElementById(
+        "editName"
+    ).value =
+        event.name;
+
+
+    document.getElementById(
+        "modalBg"
+    ).classList.add(
+        "show"
+    );
+}
+
+
+function closeEdit() {
+
+    editingIndex =
+        -1;
+
+
+    document.getElementById(
+        "modalBg"
+    ).classList.remove(
+        "show"
+    );
+}
+
+
+function saveEdit() {
+
+    if (
+        editingIndex < 0
+    ) {
+        return;
     }
 
+
+    const time =
+        document.getElementById(
+            "editTime"
+        ).value;
+
+
+    const name =
+        document.getElementById(
+            "editName"
+        ).value.trim();
+
+
+    if (
+        !time ||
+        !name
+    ) {
+
+        alert(
+            "時間と名前を入力してください。"
+        );
+
+        return;
+    }
+
+
+    const oldId =
+        events[
+            editingIndex
+        ].id;
+
+
+    events[
+        editingIndex
+    ].time =
+        time;
+
+
+    events[
+        editingIndex
+    ].name =
+        name;
+
+
+    /*
+     * タイテ変更時、
+     * その進行の実績は
+     * 一旦リセット。
+     *
+     * 本番前の時間変更を
+     * 安全に扱うため。
+     */
+
+    delete state.actualTimes[
+        oldId
+    ];
+
+
+    sortEvents();
+
+    save();
+
+    renderTimeline();
+
+    updateMain();
+
+    closeEdit();
+}
+
+
+/* =====================================================
+   DELETE
+===================================================== */
+
+function deleteEvent(index) {
 
     if (
         !confirm(
@@ -1950,9 +1982,7 @@ function deleteEvent(
     );
 
 
-    delete state.shifts[id];
-
-    delete state.actualStartTimes[id];
+    delete state.actualTimes[id];
 
 
     if (
@@ -1967,326 +1997,102 @@ function deleteEvent(
     save();
 
     renderTimeline();
-    updateDisplay();
+
+    updateMain();
 }
 
 
-/* =========================================================
-   CLEAR
-========================================================= */
+/* =====================================================
+   RESET
+===================================================== */
 
-function clearEvents(e) {
-
-    if (e) {
-        e.stopPropagation();
-    }
-
+function resetAll() {
 
     if (
         !confirm(
-            "タイムテーブルと進行状況をリセットしますか？"
+            "タイムテーブルと進行履歴をすべてリセットしますか？"
         )
     ) {
         return;
     }
 
 
-    events = [];
+    localStorage.removeItem(
+        EVENT_STORAGE
+    );
+
+    localStorage.removeItem(
+        STATE_STORAGE
+    );
 
 
-    state = {
-
-        currentIndex: -1,
-
-        actualStartTimes: {},
-
-        shifts: {}
-    };
-
-
-    save();
-
-    renderTimeline();
-    updateDisplay();
+    location.reload();
 }
 
 
-/* =========================================================
-   TIMETABLE
-========================================================= */
+/* =====================================================
+   TIMETABLE OPEN
+===================================================== */
 
-function toggleTimetable(e) {
-
-    if (e) {
-        e.stopPropagation();
-    }
-
+function toggleTimetable() {
 
     document
         .getElementById("side")
         .classList.toggle("open");
-
-
-    document.body.classList.toggle(
-        "timetable-open"
-    );
 }
 
 
-function closeTimetable() {
-
-    document
-        .getElementById("side")
-        .classList.remove("open");
-
-
-    document.body.classList.remove(
-        "timetable-open"
-    );
-}
-
-
-/* =========================================================
-   SECONDS
-========================================================= */
-
-function toggleSeconds(e) {
-
-    if (e) {
-        e.stopPropagation();
-    }
-
-
-    showSeconds =
-        !showSeconds;
-
-
-    updateClock();
-}
-
-
-/* =========================================================
-   PRODUCTION MODE
-========================================================= */
-
-async function enterProductionMode(e) {
-
-    if (e) {
-        e.stopPropagation();
-    }
-
-
-    closeTimetable();
-
-
-    document.body.classList.add(
-        "production-mode"
-    );
-
-
-    try {
-
-        if (
-            !document.fullscreenElement
-        ) {
-
-            await document
-                .documentElement
-                .requestFullscreen();
-        }
-
-    } catch (error) {}
-}
-
-
-/* =========================================================
-   ESC
-========================================================= */
-
-document.addEventListener(
-    "keydown",
-    e => {
-
-        if (
-            e.key === "Escape"
-        ) {
-
-            if (
-                document.body.classList.contains(
-                    "timetable-open"
-                )
-            ) {
-
-                closeTimetable();
-
-            }
-            else {
-
-                document.body.classList.remove(
-                    "production-mode"
-                );
-
-                if (
-                    document.fullscreenElement
-                ) {
-
-                    document
-                        .exitFullscreen()
-                        .catch(
-                            () => {}
-                        );
-                }
-            }
-        }
-    }
-);
-
-
-/* =========================================================
-   SWIPE
-========================================================= */
-
-let touchStartX = 0;
-
-
-document.addEventListener(
-    "touchstart",
-    e => {
-
-        if (
-            e.touches.length !== 1
-        ) {
-            return;
-        }
-
-
-        touchStartX =
-            e.touches[0].clientX;
-
-    },
-    {
-        passive: true
-    }
-);
-
-
-document.addEventListener(
-    "touchend",
-    e => {
-
-        if (
-            e.changedTouches.length !== 1
-        ) {
-            return;
-        }
-
-
-        const x =
-            e.changedTouches[0].clientX;
-
-
-        const dx =
-            x -
-            touchStartX;
-
-
-        /*
-            右端から左へ
-        */
-
-        if (
-            dx < -70 &&
-
-            touchStartX >
-                window.innerWidth - 100 &&
-
-            !document.body.classList.contains(
-                "timetable-open"
-            )
-        ) {
-
-            toggleTimetable();
-        }
-
-
-        /*
-            パネルを閉じる
-        */
-
-        if (
-            dx > 70 &&
-
-            document.body.classList.contains(
-                "timetable-open"
-            )
-        ) {
-
-            closeTimetable();
-        }
-
-    },
-    {
-        passive: true
-    }
-);
-
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
+/* =====================================================
+   ESCAPE
+===================================================== */
 
 function escapeHTML(text) {
 
     return String(text)
-
-        .replaceAll(
-            "&",
-            "&amp;"
-        )
-
-        .replaceAll(
-            "<",
-            "&lt;"
-        )
-
-        .replaceAll(
-            ">",
-            "&gt;"
-        )
-
-        .replaceAll(
-            '"',
-            "&quot;"
-        )
-
-        .replaceAll(
-            "'",
-            "&#039;"
-        );
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 }
 
 
-/* =========================================================
+/* =====================================================
+   SECOND BOUNDARY
+===================================================== */
+
+function startClock() {
+
+    updateClock();
+
+
+    const now =
+        new Date();
+
+
+    const delay =
+        1000 -
+        now.getMilliseconds();
+
+
+    setTimeout(
+        startClock,
+        delay
+    );
+}
+
+
+/* =====================================================
    INIT
-========================================================= */
+===================================================== */
 
-events.forEach(
-    event => {
-
-        if (!event.id) {
-            event.id = makeId();
-        }
-    }
-);
-
+sortEvents();
 
 save();
 
 renderTimeline();
 
-updateDisplay();
-
-preciseClock();
+startClock();
 
 </script>
 
